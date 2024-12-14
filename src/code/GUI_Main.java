@@ -1,6 +1,18 @@
 
 package code;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringReader;
+import java.nio.file.Files;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+
 public class GUI_Main extends javax.swing.JFrame {
 
     /**
@@ -19,21 +31,101 @@ public class GUI_Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        JPAnalizadorLexico = new javax.swing.JPanel();
+        JBCargar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        JTATextoArea = new javax.swing.JTextArea();
+        JBGenerarAnalisis = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        JPAnalizadorLexico.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Analizador Léxico", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 18))); // NOI18N
+
+        JBCargar.setText("Cargar Archivo");
+        JBCargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBCargarActionPerformed(evt);
+            }
+        });
+
+        JTATextoArea.setColumns(20);
+        JTATextoArea.setRows(5);
+        jScrollPane1.setViewportView(JTATextoArea);
+
+        JBGenerarAnalisis.setText("Generar Análisis");
+        JBGenerarAnalisis.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JBGenerarAnalisisActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout JPAnalizadorLexicoLayout = new javax.swing.GroupLayout(JPAnalizadorLexico);
+        JPAnalizadorLexico.setLayout(JPAnalizadorLexicoLayout);
+        JPAnalizadorLexicoLayout.setHorizontalGroup(
+            JPAnalizadorLexicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JPAnalizadorLexicoLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(JPAnalizadorLexicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(JPAnalizadorLexicoLayout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 648, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(20, Short.MAX_VALUE))
+                    .addGroup(JPAnalizadorLexicoLayout.createSequentialGroup()
+                        .addComponent(JBCargar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(JBGenerarAnalisis)
+                        .addGap(90, 90, 90))))
+        );
+        JPAnalizadorLexicoLayout.setVerticalGroup(
+            JPAnalizadorLexicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JPAnalizadorLexicoLayout.createSequentialGroup()
+                .addGroup(JPAnalizadorLexicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(JPAnalizadorLexicoLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(JBCargar))
+                    .addComponent(JBGenerarAnalisis))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(31, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(JPAnalizadorLexico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(JPAnalizadorLexico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
+
+        JPAnalizadorLexico.getAccessibleContext().setAccessibleName("Analizador Léxico");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void JBGenerarAnalisisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBGenerarAnalisisActionPerformed
+        try {
+            analizadorLexico();
+        } catch (Exception e) {
+            Logger.getLogger(GUI_Main.class.getName()).log(java.util.logging.Level.SEVERE, null, e);
+        }
+    }//GEN-LAST:event_JBGenerarAnalisisActionPerformed
+
+    private void JBCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBCargarActionPerformed
+       JFileChooser chooser = new JFileChooser();
+       chooser.showOpenDialog(null);
+       File archivo = new File(chooser.getSelectedFile().getAbsolutePath());
+       
+       try {
+           String ST = new String(Files.readAllBytes(archivo.toPath()));
+           JTATextoArea.setText(ST);
+       } catch (FileNotFoundException ex){
+            Logger.getLogger(GUI_Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);           
+       } catch (IOException ex) {
+            Logger.getLogger(GUI_Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_JBCargarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -71,5 +163,76 @@ public class GUI_Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton JBCargar;
+    private javax.swing.JButton JBGenerarAnalisis;
+    private javax.swing.JPanel JPAnalizadorLexico;
+    private javax.swing.JTextArea JTATextoArea;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
+    private void analizadorLexico() {
+       int cont = 1;
+
+        // Obtén el texto de entrada desde txtResultado
+        String expr = JTATextoArea.getText(); 
+        Lexer lexer = new Lexer(new StringReader(expr));
+        String resultado = "LINEA " + cont + "\t\t\tSIMBOLO\n";
+
+        try {
+            while (true) {
+                Tokens token = lexer.yylex();
+                if (token == null) {
+                    // Guardar el resultado en un archivo
+                    guardarEnArchivo(resultado);
+                    return;
+                }
+                switch (token) {
+                    case Linea:
+                        cont++;
+                        resultado += "LINEA " + cont + "\n";
+                        break;
+                    case AperturaBloque:
+                        resultado += "<Apertura de Bloque>\t" + lexer.lexeme + "\n";
+                        break;    
+                    case Error:
+                        resultado += "<ERROR: Símbolo no definido>\n";
+                        break;
+                     case FinDeArchivo:
+                        resultado += "  <Fin de archivo>\n";
+                        //Devuelve el resultado del texto analizado al alcanzar el fin del archivo
+                        guardarEnArchivo(resultado);
+                        return;    
+                    default:
+                        resultado += "Sin Token < " + lexer.lexeme + " >\n";
+                        break;  
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error durante el análisis: " + e.getMessage());
+        }
+    }
+
+    private void guardarEnArchivo(String contenido) {
+        //Abre una ventana de dialogo para elegir la ruta donde se guardará el texto analizado léxicamente.
+        JFileChooser fileChooser = new JFileChooser();
+        int seleccion = fileChooser.showSaveDialog(null);
+
+        if (seleccion == JFileChooser.APPROVE_OPTION) {
+            File archivo = fileChooser.getSelectedFile();
+            
+           // Verificar si el archivo tiene la extensión .txt
+           if (!archivo.getName().toLowerCase().endsWith(".txt")) {
+               archivo = new File(archivo.getAbsolutePath() + ".txt");
+           }
+            
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivo))) {
+                writer.write(contenido);
+                JOptionPane.showMessageDialog(null, "Archivo guardado exitosamente en: " + archivo.getPath());
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, "Error al guardar el archivo: " + e.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Guardado cancelado.");
+        }
+    }
 }
