@@ -5,8 +5,8 @@ import static code.Tokens.*;
 %type Tokens
 
 // Macros con expresiones regulares para usar en reglas
-whitespace = [ \t\r]
-newline = [\n]
+espacioEnBlanco = [ \t\r]
+nuevaLinea = [\n]
 
 %{
     public String lexeme;
@@ -42,7 +42,7 @@ asignación */
 
 /* F- Expresiones literales*/
 '[^']*' { lexeme = yytext(); return LiteralCaracter; }
-"\"[^\"\n]*\"" { lexeme = yytext(); return LiteralCadena; }
+\"([^\"\\]|\\.)*\" { lexeme = yytext(); return LiteralCadena; }
 
 /* G- Parentesis - Permiten operadores y operandos, respetando su precedencia y el mismo uso*/
 "abreregalo" { lexeme = yytext(); return ParentesisApertura; }
@@ -127,7 +127,10 @@ ejecución de los programas.*/
 "\\_.*?\\_/" { lexeme = yytext(); return MultipleLineC; }
 
 /* Salto de línea */
-{newline} { lexeme=yytext(); return Linea;}
+{nuevaLinea} { lexeme=yytext(); return Linea;}
+
+// Espacios en blanco
+{espacioEnBlanco}+ { lexeme=yytext(); return EspacioEnBlanco; }
 
 /* Error de analisis */
 . {return Error;}

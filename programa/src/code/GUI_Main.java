@@ -171,16 +171,18 @@ public class GUI_Main extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void analizadorLexico() {
-       int cont = 1;
-
+       int contLinea = 1;
+       int contColumna = 1;
+       int lexemaLength = 0;
         // Obtén el texto de entrada desde txtResultado
         String expr = JTATextoArea.getText(); 
         Lexer lexer = new Lexer(new StringReader(expr));
-        String resultado = "LINEA " + cont + "\t\t\tSIMBOLO\n";
+        String resultado = "LINEA " + contLinea + "\t\t\t\t\t\tSIMBOLO \n";
 
         try {
             while (true) {
                 Tokens token = lexer.yylex();
+                lexemaLength = lexer.lexeme.length();
                 if (token == null) {
                     // Guardar el resultado en un archivo
                     guardarEnArchivo(resultado);
@@ -188,24 +190,70 @@ public class GUI_Main extends javax.swing.JFrame {
                 }
                 switch (token) {
                     case Linea:
-                        cont++;
-                        resultado += "LINEA " + cont + "\n";
+                        contLinea++;
+                        contColumna = 0;
+                        resultado += "LINEA " + contLinea + "\n";
                         break;
                     case AperturaBloque:
-                        resultado += "<Apertura de Bloque>\t" + lexer.lexeme + "\n";
-                        break;    
-                    case Error:
-                        resultado += "<ERROR: Símbolo no definido>\n";
+                        resultado += "Columna " + contColumna + "\t<Apertura de Bloque>\t" + lexer.lexeme +   "\n";
                         break;
-                     case FinDeArchivo:
+                    case CierreBloque:
+                        resultado += "Columna " + contColumna + "\t<CierreBloque>\t\t" + lexer.lexeme +   "\n";
+                        break;
+                    case Integer:
+                        resultado += "Columna " + contColumna + "\t<Integer>\t\t" + lexer.lexeme +   "\n";
+                        break;
+                    case Float:
+                        resultado += "Columna " + contColumna + "\t<Float>\t\t\t" + lexer.lexeme +  "\n";
+                        break;
+                     case Bool:
+                        resultado += "Columna " + contColumna +"\t<Bool>\t\t\t" + lexer.lexeme +   "\n";
+                        break;
+                     case Char:
+                        resultado += "Columna " + contColumna +"\t<Char>\t\t\t" + lexer.lexeme +   "\n";
+                        break;
+                     case String:
+                        resultado += "Columna " + contColumna +"\t<String>\t\t" + lexer.lexeme +   "\n";
+                        break;
+                     case Identificador:
+                        resultado += "Columna " + contColumna +"\t<Identificador>\t\t" + lexer.lexeme +   "\n";
+                        break;
+                     case CorcheteApertura:
+                        resultado += "Columna " + contColumna +"\t<CorcheteApertura>\t" + lexer.lexeme +   "\n";
+                        break;
+                     case CorcheteCierre:
+                        resultado += "Columna " + contColumna +"\t<CorcheteCierre>\t" + lexer.lexeme +   "\n";
+                        break;
+                     case SignoAsignacion:
+                        resultado += "Columna " + contColumna +"\t<SignoAsignacion>\t" + lexer.lexeme +   "\n";
+                        break;
+                     case ParentesisApertura:
+                        resultado += "Columna " + contColumna +"\t<ParentesisApertura>\t" + lexer.lexeme +   "\n";
+                        break;
+                     case ParentesisCierre:
+                        resultado += "Columna " + contColumna +"\t<ParentesisApertura>\t" + lexer.lexeme +   "\n";
+                        break;
+                     case LiteralCaracter:
+                        resultado += "Columna " + contColumna +"\t<LiteralCaracter>\t" + lexer.lexeme +   "\n";
+                        break;
+                     case LiteralCadena:
+                        resultado += "Columna " + contColumna +"\t<LiteralCadena>\t\t" + lexer.lexeme +   "\n";
+                        break;
+                    case Error:
+                        resultado += "Columna " + contColumna +"\t<ERROR: Símbolo no definido>"+   "\n";
+                        break;
+                    case EspacioEnBlanco:
+                        break;
+                    case FinDeArchivo:
                         resultado += "  <Fin de archivo>\n";
                         //Devuelve el resultado del texto analizado al alcanzar el fin del archivo
                         guardarEnArchivo(resultado);
                         return;    
                     default:
-                        resultado += "Sin Token < " + lexer.lexeme + " >\n";
+                        resultado += "Columna " + contColumna + "\tSin Token < " + lexer.lexeme + " >" +   "\n";
                         break;  
                 }
+                contColumna+= lexemaLength;
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error durante el análisis: " + e.getMessage());

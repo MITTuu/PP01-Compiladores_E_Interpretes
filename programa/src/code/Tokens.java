@@ -68,6 +68,7 @@ public enum Tokens {
     /*Otros*/
     Linea,
     Error,
+    EspacioEnBlanco,
     FinDeArchivo,
     FinSentencia,
     Main
