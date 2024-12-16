@@ -1,0 +1,65 @@
+package code;
+
+import java_cup.runtime.Symbol;
+
+parser code
+{:
+    private Symbol s;
+     
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }   
+
+    public Symbol getS(){
+        return this.s;
+    }
+:};
+
+/* TERMINALES */
+
+/*Palabras reservadas*/
+    terminal AperturaBloque, CierreBloque, Integer, Float, Bool, Char, String, Identificador, CorcheteApertura;
+    terminal CorcheteCierre, SignoAsignacion, ParentesisApertura, ParentesisCierre;
+
+/*Literales*/ 
+    terminal LiteralCaracter, LiteralCadena;
+
+/*Expresiones aritmeticas*/
+    terminal Suma, Resta, Division, Multiplicacion, Modulo, Potencia, Incremento, Decremento, Negativo;
+
+/*Expresiones relacionales*/
+    terminal Menor, MenorIgual, Mayor, MayorIgual, Igual, Diferente;
+
+/*Expresiones logicas*/
+    terminal Conjuncion, Disyuncion, Negacion;
+
+/*Expresiones de control*/
+    terminal If, Else, While, For, Switch, Case, Default, Break, Return, DosPuntos;
+
+/*Lectura*/
+    terminal Print, Read;
+
+/*Comentarios*/
+    terminal OneLineC, MultipleLineC;
+
+/*Otros*/
+    terminal Linea, Error, EspacioEnBlanco, FinDeArchivo, FinSentencia, Main;
+
+
+/* NON TERMINALES */
+
+//Este non terminal es obligatorio, es la raiz de todas las reglas de produccion 
+    non terminal program;
+
+// Declaración del símbolo inicial
+    start with program;
+
+// Definición del no terminal inicial
+    program ::= /* puede estar vacío o tener otras producciones */;
+
+
+
+
+
+
+

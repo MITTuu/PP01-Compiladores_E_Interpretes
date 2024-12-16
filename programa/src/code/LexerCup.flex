@@ -1,87 +1,96 @@
 package code;
-import static code.Tokens.*;
+import java_cup.runtime.Symbol;
 %%
-%class Lexer
-%type Tokens
+%class LexerCup
+%type java_cup.runtime.Symbol
+%cup
+%full
+%line
+%char
 
 // Macros con expresiones regulares para usar en reglas
-espacioEnBlanco = [ \t\r]
-nuevaLinea = [\n]
+    espacioEnBlanco = [ \t\r]
+    nuevaLinea = [\n]
 
 %{
-    public String lexeme;
+    private Symbol symbol(int type, Object value){
+        return new Symbol(type, yyline, yycolumn, value);
+    }
+    private Symbol symbol(int type){
+        return new Symbol(type, yyline, yycolumn);
+    }
 %}
 %%
 
 /* A- Apertura y Cierre de bloque - Permiten la creación de funciones, estructuras de control, bloques de código
 y sentencias de código */
-"abrecuento" { lexeme = yytext(); return AperturaBloque; }
-"cierracuento" { lexeme = yytext(); return CierreBloque; }
+    "abrecuento" { return new Symbol(sym.AperturaBloque, yychar, yyline, yytext()); }
+    "cierracuento" { return new Symbol(sym.CierreBloque, yychar, yyline, yytext()); }
 
 /* B- Manejo de tipos de variables enteras, flotantes, booleanas, caracteres,
 cadenas de caracteres (string) y arreglo estático */
-"rodolfo" { lexeme = yytext(); return Integer; }
-"bromista" { lexeme = yytext(); return Float; }
-"trueno" { lexeme = yytext(); return Bool; }
-"cupido" { lexeme = yytext(); return Char; }
-"cometa" { lexeme = yytext(); return String; }
+    "rodolfo" { return new Symbol(sym.Integer, yychar, yyline, yytext()); }
+    "bromista" { return new Symbol(sym.Float, yychar, yyline, yytext()); }
+    "trueno" { return new Symbol(sym.Bool, yychar, yyline, yytext()); }
+    "cupido" { return new Symbol(sym.Char, yychar, yyline, yytext()); }
+    "cometa" { return new Symbol(sym.String, yychar, yyline, yytext()); }
 
 /* C- Este punto de regla de identificadores de traslado después del punto "q" para evitar conflictos*/
 
 /* D- Arreglos unidimensionales de tipo entero o char - Permiten crearlos de tipo entero o char.
 También obtienen y modifican sus elementos y ser utilizados en expresiones*/
-"abreempaque" { lexeme = yytext(); return CorcheteApertura; }
-"cierraempaque" { lexeme = yytext(); return CorcheteCierre; }
+    "abreempaque" { return new Symbol(sym.CorcheteApertura, yychar, yyline, yytext()); }
+    "cierraempaque" { return new Symbol(sym.CorcheteCierre, yychar, yyline, yytext()); }
 
 /* E- Signo de asignacion - Permiten sentencias para creación de variables, creación y asignación de expresiones 
 y asignación de expresiones a variables, y algunos casos, sólo expresiones sin 
 asignación */
-"entrega" { lexeme = yytext(); return SignoAsignacion; }
+    "entrega" { return new Symbol(sym.SignoAsignacion, yychar, yyline, yytext()); }
 
 /* F- Expresiones literales*/
-'[^']*' { lexeme = yytext(); return LiteralCaracter; }
-\"([^\"\\]|\\.)*\" { lexeme = yytext(); return LiteralCadena; }
+    '[^']*' { return new Symbol(sym.LiteralCaracter, yychar, yyline, yytext()); }
+    \"([^\"\\]|\\.)*\" { return new Symbol(sym.LiteralCadena, yychar, yyline, yytext()); }
 
 /* G- Parentesis - Permiten operadores y operandos, respetando su precedencia y el mismo uso*/
-"abreregalo" { lexeme = yytext(); return ParentesisApertura; }
-"cierraregalo" { lexeme = yytext(); return ParentesisCierre; }
+    "abreregalo" { return new Symbol(sym.ParentesisApertura, yychar, yyline, yytext()); }
+    "cierraregalo" { return new Symbol(sym.ParentesisCierre, yychar, yyline, yytext()); }
 
 /*h. Permitir expresiones aritméticas binarias de suma, resta, división –entera o decimal
   según el tipo–, multiplicación, módulo y potencia. Para enteros o flotantes.*/
-"navidad" { lexeme = yytext(); return Suma; }
-"intercambio" { lexeme = yytext(); return Resta; }
-"reyes" { lexeme = yytext(); return Division; }
-"nochebuena" { lexeme = yytext(); return Multiplicacion; }
-"magos" { lexeme = yytext(); return Modulo; }
-"adviento" { lexeme = yytext(); return Potencia; }
+    "navidad" { return new Symbol(sym.Suma, yychar, yyline, yytext()); }
+    "intercambio" { return new Symbol(sym.Resta, yychar, yyline, yytext()); }
+    "reyes" { return new Symbol(sym.Division, yychar, yyline, yytext()); }
+    "nochebuena" { return new Symbol(sym.Multiplicacion, yychar, yyline, yytext()); }
+    "magos" { return new Symbol(sym.Modulo, yychar, yyline, yytext()); }
+    "adviento" { return new Symbol(sym.Potencia, yychar, yyline, yytext()); }
 
 /*i. Permitir expresiones aritméticas unarias de negativo (-), incremento, decremento,
 después del operando (postorden); esto para enteros, el negativo adicionalmente
 se puede aplicar a flotantes. El negativo a literales y el incremento y decremento a
 variables.*/
-"quien" { lexeme = yytext(); return Incremento; }
-"grinch" { lexeme = yytext(); return Decremento; }
-"-" { lexeme = yytext(); return Negativo; } 
+    "quien" { return new Symbol(sym.Incremento, yychar, yyline, yytext()); }
+    "grinch" { return new Symbol(sym.Decremento, yychar, yyline, yytext()); }
+    "-" { return new Symbol(sym.Negativo, yychar, yyline, yytext()); } 
 
 /*j. Permitir expresiones relacionales (sobre enteros y flotantes) de menor, menor o
 igual, mayor, mayor o igual, igual y diferente. Los operadores igual y diferente
 permiten adicionalmente tipo booleano.*/
-"snowball" { lexeme = yytext(); return Menor; }
-"evergreen" { lexeme = yytext(); return MenorIgual; }
-"minstix" { lexeme = yytext(); return Mayor; }
-"upatree" { lexeme = yytext(); return MayorIgual; }
-"mary" { lexeme = yytext(); return Igual; }
-"openslae" { lexeme = yytext(); return Diferente; }
+    "snowball" { return new Symbol(sym.Menor, yychar, yyline, yytext()); }
+    "evergreen" { return new Symbol(sym.MenorIgual, yychar, yyline, yytext()); }
+    "minstix" { return new Symbol(sym.Mayor, yychar, yyline, yytext()); }
+    "upatree" { return new Symbol(sym.MayorIgual, yychar, yyline, yytext()); }
+    "mary" { return new Symbol(sym.Igual, yychar, yyline, yytext()); }
+    "openslae" { return new Symbol(sym.Diferente, yychar, yyline, yytext()); }
 
 /*k. Permitir expresiones lógicas de conjunción, disyunción y negación.*/
-"melchor" { lexeme = yytext(); return Conjuncion; }
-"gaspar" { lexeme = yytext(); return Disyuncion; }
-"baltazar" { lexeme = yytext(); return Negacion; }
+    "melchor" { return new Symbol(sym.Conjuncion, yychar, yyline, yytext()); }
+    "gaspar" { return new Symbol(sym.Disyuncion, yychar, yyline, yytext()); }
+    "baltazar" { return new Symbol(sym.Negacion, yychar, yyline, yytext()); }
 
 /*l. Debe permitir sentencias de código para las diferentes expresiones mencionadas
 anteriormente y su combinación. Además, dichas expresiones pueden usarse en las
 condicionales y bloques de las siguientes estructuras de control.*/
-"finregalo" { lexeme = yytext(); return FinSentencia; }
+    "finregalo" { return new Symbol(sym.FinSentencia, yychar, yyline, yytext()); }
 
 /*m. Debe permitir el uso de tipos y la combinación de expresiones aritméticas (binarias
 y unarias), relacionales y lógicas, según las reglas gramaticales, aritméticas,
@@ -93,22 +102,22 @@ referencia el lenguaje C.*/
 /*n. Debe permitir las estructuras de control if-[else], while, switch y for, además,
 permitir return y break. Las expresiones de las condiciones deberán ser valores
 booleanos combinando expresiones aritméticas, lógicas y relacionales.*/
-"elfo" { lexeme = yytext(); return If; }
-"hada" { lexeme = yytext(); return Else; }
-"envuelve" { lexeme = yytext(); return While; }
-"duende" { lexeme = yytext(); return For; }
-"varios" { lexeme = yytext(); return Switch; }
-"historia" { lexeme = yytext(); return Case; }
-"ultimo" { lexeme = yytext(); return Default; }
-"corta" { lexeme = yytext(); return Break; }
-"envia" { lexeme = yytext(); return Return; }
-"sigue" { lexeme = yytext(); return DosPuntos; }
+    "elfo" { return new Symbol(sym.If, yychar, yyline, yytext()); }
+    "hada" { return new Symbol(sym.Else, yychar, yyline, yytext()); }
+    "envuelve" { return new Symbol(sym.While, yychar, yyline, yytext()); }
+    "duende" { return new Symbol(sym.For, yychar, yyline, yytext()); }
+    "varios" { return new Symbol(sym.Switch, yychar, yyline, yytext()); }
+    "historia" { return new Symbol(sym.Case, yychar, yyline, yytext()); }
+    "ultimo" { return new Symbol(sym.Default, yychar, yyline, yytext()); }
+    "corta" { return new Symbol(sym.Break, yychar, yyline, yytext()); }
+    "envia" { return new Symbol(sym.Return, yychar, yyline, yytext()); }
+    "sigue" { return new Symbol(sym.DosPuntos, yychar, yyline, yytext()); }
 
 /*o. Debe permitir las funciones de leer (enteros y flotantes) y escribir en la salida
 estándar (cadena carácter, enteros y flotantes), se pueden escribir literales o
 variables, se lee a identificadores.*/
-"narra" { lexeme = yytext(); return Print; }
-"escucha" { lexeme = yytext(); return Read; }
+    "narra" { return new Symbol(sym.Print, yychar, yyline, yytext()); }
+    "escucha" { return new Symbol(sym.Read, yychar, yyline, yytext()); }
 
 /*p. Debe permitir la creación y utilización de funciones, estos deben retornar valores
 (entero, flotantes, char o booleanos) y recibir parámetros (con tipo). Separador de
@@ -118,24 +127,25 @@ parámetros sigue siendo la coma.*/
 
 /*q. Identificador Main - Debe existir un único procedimiento inicial main, por medio de la cual se inicia la
 ejecución de los programas.*/
-"_verano_" { lexeme = yytext(); return Main; }
+    "_verano_" { return new Symbol(sym.Main, yychar, yyline, yytext()); }
 
 /* C- Identificadores - Regla general - Inician y finalizan con guion bajo*/
-_[a-zA-Z0-9]+_ { lexeme = yytext(); return Identificador; }
+    _[a-zA-Z0-9]+_ { return new Symbol(sym.Identificador, yychar, yyline, yytext()); }
 
 /*r. Además, debe permitir comentarios de una línea (#) o múltiples líneas (\_ _/).*/
-"#.*" { lexeme = yytext(); return OneLineC; }
-\\_.*_\/ { lexeme = yytext(); return MultipleLineC; }
-\_([^*]|(\*+[^_/]))*\*_\/ { lexeme = yytext(); return MultipleLineC; }
+    "#.*" { return new Symbol(sym.OneLineC, yychar, yyline, yytext()); }
+    \\_.*_\/ { return new Symbol(sym.MultipleLineC, yychar, yyline, yytext()); }
+    \_([^*]|(\*+[^_/]))*\*_\/ { return new Symbol(sym.MultipleLineC, yychar, yyline, yytext()); }
 
 /* Salto de línea */
-{nuevaLinea} { lexeme=yytext(); return Linea;}
+    {nuevaLinea} { return new Symbol(sym.Linea, yychar, yyline, yytext()); }
 
 // Espacios en blanco
-{espacioEnBlanco}+ { lexeme=yytext(); return EspacioEnBlanco; }
+    {espacioEnBlanco}+ { return new Symbol(sym.EspacioEnBlanco, yychar, yyline, yytext()); }
 
 /* Error de analisis */
-. {return Error;}
+    . { return new Symbol(sym.Error, yychar, yyline, yytext()); }
 
 /* Fin de archivo (EOF) */
-<<EOF>> { lexeme=yytext(); return FinDeArchivo; }
+    <<EOF>> { return new Symbol(sym.FinDeArchivo, yychar, yyline, yytext()); }
+
