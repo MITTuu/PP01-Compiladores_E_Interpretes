@@ -43,9 +43,6 @@
           </Border>
         </Property>
       </Properties>
-      <AccessibilityProperties>
-        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Analizador L&#xe9;xico"/>
-      </AccessibilityProperties>
 
       <Layout>
         <DimensionLayout dim="0">

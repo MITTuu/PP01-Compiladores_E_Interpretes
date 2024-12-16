@@ -26,9 +26,7 @@ cadenas de caracteres (string) y arreglo estático */
 "cupido" { lexeme = yytext(); return Char; }
 "cometa" { lexeme = yytext(); return String; }
 
-/* C- Identificadores - Inician y finalizan con guion bajo*/
-/*_[a-zA-Z][a-zA-Z0-9]*_ { lexeme = yytext(); return Identificador; } */
-_[a-zA-Z0-9]+_ { lexeme = yytext(); return Identificador; }
+/* C- Este punto de regla de identificadores de traslado después del punto "q" para evitar conflictos*/
 
 /* D- Arreglos unidimensionales de tipo entero o char - Permiten crearlos de tipo entero o char.
 También obtienen y modifican sus elementos y ser utilizados en expresiones*/
@@ -118,13 +116,17 @@ parámetros sigue siendo la coma.*/
 
 /*---*/
 
-/*q. Debe existir un único procedimiento inicial main, por medio de la cual se inicia la
+/*q. Identificador Main - Debe existir un único procedimiento inicial main, por medio de la cual se inicia la
 ejecución de los programas.*/
 "_verano_" { lexeme = yytext(); return Main; }
 
+/* C- Identificadores - Regla general - Inician y finalizan con guion bajo*/
+_[a-zA-Z0-9]+_ { lexeme = yytext(); return Identificador; }
+
 /*r. Además, debe permitir comentarios de una línea (#) o múltiples líneas (\_ _/).*/
 "#.*" { lexeme = yytext(); return OneLineC; }
-"\\_.*?\\_/" { lexeme = yytext(); return MultipleLineC; }
+\\_.*_\/ { lexeme = yytext(); return MultipleLineC; }
+\_([^*]|(\*+[^_/]))*\*_\/ { lexeme = yytext(); return MultipleLineC; }
 
 /* Salto de línea */
 {nuevaLinea} { lexeme=yytext(); return Linea;}

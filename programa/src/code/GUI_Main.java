@@ -174,6 +174,7 @@ public class GUI_Main extends javax.swing.JFrame {
        int contLinea = 1;
        int contColumna = 1;
        int lexemaLength = 0;
+       boolean continuaError = false;
         // Obtén el texto de entrada desde txtResultado
         String expr = JTATextoArea.getText(); 
         Lexer lexer = new Lexer(new StringReader(expr));
@@ -181,12 +182,18 @@ public class GUI_Main extends javax.swing.JFrame {
 
         try {
             while (true) {
-                Tokens token = lexer.yylex();
-                lexemaLength = lexer.lexeme.length();
+                Tokens token = lexer.yylex();                
                 if (token == null) {
                     // Guardar el resultado en un archivo
                     guardarEnArchivo(resultado);
                     return;
+                }
+                //Registrar longitud de la cadena de caracteres del lexema para calcular la columna
+                lexemaLength = lexer.lexeme.length();
+                
+                //Flag para registrar error solo una vez
+                if(continuaError && token != Tokens.Error){
+                    continuaError = false;
                 }
                 switch (token) {
                     case Linea:
@@ -195,52 +202,159 @@ public class GUI_Main extends javax.swing.JFrame {
                         resultado += "LINEA " + contLinea + "\n";
                         break;
                     case AperturaBloque:
-                        resultado += "Columna " + contColumna + "\t<Apertura de Bloque>\t" + lexer.lexeme +   "\n";
+                        resultado += "Columna " + contColumna + "\t<Apertura de Bloque>\t\t" + lexer.lexeme +   "\n";
                         break;
                     case CierreBloque:
-                        resultado += "Columna " + contColumna + "\t<CierreBloque>\t\t" + lexer.lexeme +   "\n";
+                        resultado += "Columna " + contColumna + "\t<CierreBloque>\t\t\t" + lexer.lexeme +   "\n";
                         break;
                     case Integer:
-                        resultado += "Columna " + contColumna + "\t<Integer>\t\t" + lexer.lexeme +   "\n";
+                        resultado += "Columna " + contColumna + "\t<Integer>\t\t\t" + lexer.lexeme +   "\n";
                         break;
                     case Float:
-                        resultado += "Columna " + contColumna + "\t<Float>\t\t\t" + lexer.lexeme +  "\n";
+                        resultado += "Columna " + contColumna + "\t<Float>\t\t\t\t" + lexer.lexeme +  "\n";
                         break;
-                     case Bool:
-                        resultado += "Columna " + contColumna +"\t<Bool>\t\t\t" + lexer.lexeme +   "\n";
-                        break;
-                     case Char:
-                        resultado += "Columna " + contColumna +"\t<Char>\t\t\t" + lexer.lexeme +   "\n";
-                        break;
-                     case String:
-                        resultado += "Columna " + contColumna +"\t<String>\t\t" + lexer.lexeme +   "\n";
-                        break;
-                     case Identificador:
-                        resultado += "Columna " + contColumna +"\t<Identificador>\t\t" + lexer.lexeme +   "\n";
-                        break;
-                     case CorcheteApertura:
-                        resultado += "Columna " + contColumna +"\t<CorcheteApertura>\t" + lexer.lexeme +   "\n";
-                        break;
-                     case CorcheteCierre:
-                        resultado += "Columna " + contColumna +"\t<CorcheteCierre>\t" + lexer.lexeme +   "\n";
-                        break;
-                     case SignoAsignacion:
-                        resultado += "Columna " + contColumna +"\t<SignoAsignacion>\t" + lexer.lexeme +   "\n";
-                        break;
-                     case ParentesisApertura:
-                        resultado += "Columna " + contColumna +"\t<ParentesisApertura>\t" + lexer.lexeme +   "\n";
-                        break;
-                     case ParentesisCierre:
-                        resultado += "Columna " + contColumna +"\t<ParentesisApertura>\t" + lexer.lexeme +   "\n";
-                        break;
-                     case LiteralCaracter:
-                        resultado += "Columna " + contColumna +"\t<LiteralCaracter>\t" + lexer.lexeme +   "\n";
-                        break;
-                     case LiteralCadena:
-                        resultado += "Columna " + contColumna +"\t<LiteralCadena>\t\t" + lexer.lexeme +   "\n";
-                        break;
+                    case Bool:
+                       resultado += "Columna " + contColumna +"\t<Bool>\t\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Char:
+                       resultado += "Columna " + contColumna +"\t<Char>\t\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case String:
+                       resultado += "Columna " + contColumna +"\t<String>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Identificador:
+                       resultado += "Columna " + contColumna +"\t<Identificador>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case CorcheteApertura:
+                       resultado += "Columna " + contColumna +"\t<CorcheteApertura>\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case CorcheteCierre:
+                       resultado += "Columna " + contColumna +"\t<CorcheteCierre>\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case SignoAsignacion:
+                       resultado += "Columna " + contColumna +"\t<SignoAsignacion>\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case ParentesisApertura:
+                       resultado += "Columna " + contColumna +"\t<ParentesisApertura>\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case ParentesisCierre:
+                       resultado += "Columna " + contColumna +"\t<ParentesisApertura>\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case LiteralCaracter:
+                       resultado += "Columna " + contColumna +"\t<LiteralCaracter>\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case LiteralCadena:
+                       resultado += "Columna " + contColumna +"\t<LiteralCadena>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Suma:
+                       resultado += "Columna " + contColumna +"\t<Suma>\t\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Resta:
+                       resultado += "Columna " + contColumna +"\t<Resta>\t\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Division:
+                       resultado += "Columna " + contColumna +"\t<Division>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Multiplicacion:
+                       resultado += "Columna " + contColumna +"\t<Multiplicacion>\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Modulo:
+                       resultado += "Columna " + contColumna +"\t<Modulo>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Potencia:
+                       resultado += "Columna " + contColumna +"\t<Potencia>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Incremento:
+                       resultado += "Columna " + contColumna +"\t<Incremento>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Decremento:
+                       resultado += "Columna " + contColumna +"\t<Decremento>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Negativo:
+                       resultado += "Columna " + contColumna +"\t<Negativo>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Menor:
+                       resultado += "Columna " + contColumna +"\t<Menor>\t\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case MenorIgual:
+                       resultado += "Columna " + contColumna +"\t<MenorIgual>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Mayor:
+                       resultado += "Columna " + contColumna +"\t<Mayor>\t\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case MayorIgual:
+                       resultado += "Columna " + contColumna +"\t<MayorIgual>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Igual:
+                       resultado += "Columna " + contColumna +"\t<Igual>\t\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Diferente:
+                       resultado += "Columna " + contColumna +"\t<Diferente>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Conjuncion:
+                       resultado += "Columna " + contColumna +"\t<Conjuncion>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Disyuncion:
+                       resultado += "Columna " + contColumna +"\t<Disyuncion>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Negacion:
+                       resultado += "Columna " + contColumna +"\t<Negacion>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case If:
+                       resultado += "Columna " + contColumna +"\t<If>\t\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Else:
+                       resultado += "Columna " + contColumna +"\t<Else>\t\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case While:
+                       resultado += "Columna " + contColumna +"\t<While>\t\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case For:
+                       resultado += "Columna " + contColumna +"\t<For>\t\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Switch:
+                       resultado += "Columna " + contColumna +"\t<Switch>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Case:
+                       resultado += "Columna " + contColumna +"\t<Case>\t\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Default:
+                       resultado += "Columna " + contColumna +"\t<Default>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Break:
+                       resultado += "Columna " + contColumna +"\t<Break>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Return:
+                       resultado += "Columna " + contColumna +"\t<Return>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case DosPuntos:
+                       resultado += "Columna " + contColumna +"\t<DosPuntos>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Print:
+                       resultado += "Columna " + contColumna +"\t<Print>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Read:
+                       resultado += "Columna " + contColumna +"\t<Read>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case OneLineC:
+                       resultado += "Columna " + contColumna +"\t<OneLineC>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case MultipleLineC:
+                       resultado += "Columna " + contColumna +"\t<MultipleLineC>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case FinSentencia:
+                       resultado += "Columna " + contColumna +"\t<FinSentencia>\t\t\t" + lexer.lexeme +   "\n";
+                       break;
+                    case Main:
+                       resultado += "Columna " + contColumna +"\t<Main>\t\t\t\t" + lexer.lexeme +   "\n";
+                       break;                                      
                     case Error:
-                        resultado += "Columna " + contColumna +"\t<ERROR: Símbolo no definido>"+   "\n";
+                        if(continuaError){
+                            break;
+                        }
+                        resultado += "Columna " + contColumna +"\t<ERROR: Símbolo no definido>" + "\n";
+                        //Flag para registrar error solo una vez
+                        continuaError = true;
                         break;
                     case EspacioEnBlanco:
                         break;
