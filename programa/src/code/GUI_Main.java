@@ -37,6 +37,9 @@ public class GUI_Main extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         JTATextoArea = new javax.swing.JTextArea();
         JBGenerarAnalisis = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        JTATextoArea1 = new javax.swing.JTextArea();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -60,6 +63,17 @@ public class GUI_Main extends javax.swing.JFrame {
             }
         });
 
+        JTATextoArea1.setColumns(20);
+        JTATextoArea1.setRows(5);
+        jScrollPane2.setViewportView(JTATextoArea1);
+
+        jButton1.setText("Guardar Análisis");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout JPAnalizadorLexicoLayout = new javax.swing.GroupLayout(JPAnalizadorLexico);
         JPAnalizadorLexico.setLayout(JPAnalizadorLexicoLayout);
         JPAnalizadorLexicoLayout.setHorizontalGroup(
@@ -67,40 +81,47 @@ public class GUI_Main extends javax.swing.JFrame {
             .addGroup(JPAnalizadorLexicoLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addGroup(JPAnalizadorLexicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 570, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(JBCargar))
+                .addGap(40, 40, 40)
+                .addGroup(JPAnalizadorLexicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(JPAnalizadorLexicoLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 648, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(20, Short.MAX_VALUE))
-                    .addGroup(JPAnalizadorLexicoLayout.createSequentialGroup()
-                        .addComponent(JBCargar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(JBGenerarAnalisis)
-                        .addGap(90, 90, 90))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 570, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         JPAnalizadorLexicoLayout.setVerticalGroup(
             JPAnalizadorLexicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JPAnalizadorLexicoLayout.createSequentialGroup()
-                .addGroup(JPAnalizadorLexicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(JPAnalizadorLexicoLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(JBCargar))
-                    .addComponent(JBGenerarAnalisis))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(JPAnalizadorLexicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(JPAnalizadorLexicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(JBCargar)
+                        .addComponent(JBGenerarAnalisis, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(jButton1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(JPAnalizadorLexicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(JPAnalizadorLexico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(JPAnalizadorLexico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(JPAnalizadorLexico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(JPAnalizadorLexico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
-
-        JPAnalizadorLexico.getAccessibleContext().setAccessibleName("Analizador Léxico");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -127,6 +148,10 @@ public class GUI_Main extends javax.swing.JFrame {
             Logger.getLogger(GUI_Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_JBCargarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        guardarEnArchivo(JTATextoArea1.getText());
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -168,7 +193,10 @@ public class GUI_Main extends javax.swing.JFrame {
     private javax.swing.JButton JBGenerarAnalisis;
     private javax.swing.JPanel JPAnalizadorLexico;
     private javax.swing.JTextArea JTATextoArea;
+    private javax.swing.JTextArea JTATextoArea1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
 
     private void analizadorLexico() {
@@ -187,8 +215,8 @@ public class GUI_Main extends javax.swing.JFrame {
                 //Tokens token = lexer.yylex();
                 Symbol symbol = lexerCup.next_token();
                 if (symbol == null) {
-                    // Guardar el resultado en un archivo
-                    guardarEnArchivo(resultado);
+                    // Guardar el resultado en un archivo             
+                    JTATextoArea1.setText(resultado);
                     return;
                 }
                 //Registrar longitud de la cadena de caracteres del lexema para calcular la columna
@@ -364,7 +392,7 @@ public class GUI_Main extends javax.swing.JFrame {
                     case sym.FinDeArchivo:
                         resultado += "  <Fin de archivo>\n";
                         //Devuelve el resultado del texto analizado al alcanzar el fin del archivo
-                        guardarEnArchivo(resultado);
+                        JTATextoArea1.setText(resultado);
                         return;    
                     default:
                         resultado += "Columna " + contColumna + "\tSin Token < " + symbol.value + " >" +   "\n";
