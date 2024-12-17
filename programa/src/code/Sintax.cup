@@ -22,7 +22,7 @@ parser code
     terminal CorcheteCierre, SignoAsignacion, ParentesisApertura, ParentesisCierre;
 
 /*Literales*/ 
-    terminal LiteralCaracter, LiteralCadena;
+    terminal LiteralCaracter, LiteralCadena, LiteralEntero, LiteralFlotante;
 
 /*Expresiones aritmeticas*/
     terminal Suma, Resta, Division, Multiplicacion, Modulo, Potencia, Incremento, Decremento, Negativo;
@@ -34,7 +34,10 @@ parser code
     terminal Conjuncion, Disyuncion, Negacion;
 
 /*Expresiones de control*/
-    terminal If, Else, While, For, Switch, Case, Default, Break, Return, DosPuntos;
+    terminal If, Else, While, For, Switch, Case, Default, Break, Return, DosPuntos, Coma;
+
+/* bool */
+    terminal LiteralBool;
 
 /*Lectura*/
     terminal Print, Read;

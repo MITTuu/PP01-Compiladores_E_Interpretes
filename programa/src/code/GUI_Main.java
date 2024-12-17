@@ -63,6 +63,7 @@ public class GUI_Main extends javax.swing.JFrame {
             }
         });
 
+        JTATextoArea1.setEditable(false);
         JTATextoArea1.setColumns(20);
         JTATextoArea1.setRows(5);
         jScrollPane2.setViewportView(JTATextoArea1);
@@ -378,7 +379,19 @@ public class GUI_Main extends javax.swing.JFrame {
                        break;
                     case sym.Main:
                        resultado += "Columna " + contColumna +"\t<Main>\t\t\t\t" + symbol.value +   "\n";
-                       break;                                      
+                       break;
+                    case sym.LiteralEntero:
+                       resultado += "Columna " + contColumna +"\t<LiteralEntero>\t\t\t\t" + symbol.value +   "\n";
+                       break;   
+                    case sym.LiteralFlotante:
+                       resultado += "Columna " + contColumna +"\t<LiteralFlotante>\t\t\t\t" + symbol.value +   "\n";
+                       break;
+                    case sym.Coma:
+                       resultado += "Columna " + contColumna +"\t<Coma>\t\t\t\t" + symbol.value +   "\n";
+                       break;
+                    case sym.LiteralBool:
+                       resultado += "Columna " + contColumna +"\t<LiteralBool>\t\t\t\t" + symbol.value +   "\n";
+                       break;                        
                     case sym.Error:
                         if(continuaError){
                             break;
@@ -393,6 +406,7 @@ public class GUI_Main extends javax.swing.JFrame {
                         resultado += "  <Fin de archivo>\n";
                         //Devuelve el resultado del texto analizado al alcanzar el fin del archivo
                         JTATextoArea1.setText(resultado);
+                        System.out.print(resultado);
                         return;    
                     default:
                         resultado += "Columna " + contColumna + "\tSin Token < " + symbol.value + " >" +   "\n";

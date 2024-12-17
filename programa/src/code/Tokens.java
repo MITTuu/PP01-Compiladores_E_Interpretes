@@ -20,6 +20,8 @@ public enum Tokens {
     /*Literales*/
     LiteralCaracter,
     LiteralCadena,
+    LiteralEntero,
+    LiteralFlotante,
     
     /*Expresiones aritmeticas*/
     Suma,

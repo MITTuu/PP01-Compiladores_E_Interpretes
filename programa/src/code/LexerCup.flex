@@ -11,7 +11,9 @@ import java_cup.runtime.Symbol;
 // Macros con expresiones regulares para usar en reglas
     espacioEnBlanco = [ \t\r]
     nuevaLinea = [\n]
-
+    l_entero = 0|[-]?[1-9][0-9]*
+    l_flotante = {l_entero}"."[0-9]+
+    l_bool = "true" | "false"
 %{
     private Symbol symbol(int type, Object value){
         return new Symbol(type, yyline, yycolumn, value);
@@ -21,6 +23,15 @@ import java_cup.runtime.Symbol;
     }
 %}
 %%
+
+/* Números enteros positivos o negativos (permitiendo el 0 como caso especial) */
+    {l_entero} { return new Symbol(sym.LiteralEntero, yychar, yyline, yytext()); }
+
+/* Números flotantes positivos o negativos */
+    {l_flotante} { return new Symbol(sym.LiteralFlotante, yychar, yyline, yytext()); }
+
+/* Literales booleanos */
+    {l_bool} { return new Symbol(sym.LiteralBool, yychar, yyline, yytext()); }
 
 /* A- Apertura y Cierre de bloque - Permiten la creación de funciones, estructuras de control, bloques de código
 y sentencias de código */
@@ -112,6 +123,7 @@ booleanos combinando expresiones aritméticas, lógicas y relacionales.*/
     "corta" { return new Symbol(sym.Break, yychar, yyline, yytext()); }
     "envia" { return new Symbol(sym.Return, yychar, yyline, yytext()); }
     "sigue" { return new Symbol(sym.DosPuntos, yychar, yyline, yytext()); }
+    "," { return new Symbol(sym.Coma, yychar, yyline, yytext()); }
 
 /*o. Debe permitir las funciones de leer (enteros y flotantes) y escribir en la salida
 estándar (cadena carácter, enteros y flotantes), se pueden escribir literales o
@@ -134,8 +146,7 @@ ejecución de los programas.*/
 
 /*r. Además, debe permitir comentarios de una línea (#) o múltiples líneas (\_ _/).*/
     "#.*" { return new Symbol(sym.OneLineC, yychar, yyline, yytext()); }
-    \\_.*_\/ { return new Symbol(sym.MultipleLineC, yychar, yyline, yytext()); }
-    \_([^*]|(\*+[^_/]))*\*_\/ { return new Symbol(sym.MultipleLineC, yychar, yyline, yytext()); }
+    \\_(.|\\s)*?\\_\/ { return new Symbol(sym.MultipleLineC, yychar, yyline, yytext()); }
 
 /* Salto de línea */
     {nuevaLinea} { return new Symbol(sym.Linea, yychar, yyline, yytext()); }
