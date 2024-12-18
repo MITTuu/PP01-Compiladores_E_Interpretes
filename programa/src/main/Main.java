@@ -1,4 +1,4 @@
-package code;
+package main;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,9 +13,9 @@ public class Main {
          String baseDir = System.getProperty("user.dir");
          
          //Construir las rutas relativas usando baseDir
-         String ruta2 = Paths.get(baseDir, "src", "code", "LexerCup.flex").toString();
+         String ruta2 = Paths.get(baseDir, "src", "ParserLexer", "lexer.flex").toString();
          String[] rutaS = {
-            "-parser", "Sintax", Paths.get(baseDir, "src", "code", "Sintax.cup").toString()
+            "-parser", "parser", Paths.get(baseDir, "src", "ParserLexer", "parser.cup").toString()
         };
          
          // Llamada al método para generar los archivos
@@ -35,7 +35,7 @@ public class Main {
         
         // Rutas relativas para sym.java y Sintax.java
         Path baseDir = Paths.get(System.getProperty("user.dir"));
-        Path rutaSym = baseDir.resolve("src/code/sym.java");
+        Path rutaSym = baseDir.resolve("src/ParserLexer/sym.java");
         
         //Elimina archivos existentes antes de mover los archivos generados actualizados
         if (Files.exists(rutaSym)) {
@@ -46,12 +46,12 @@ public class Main {
             rutaSym
         );
 
-        Path rutaSin = baseDir.resolve("src/code/Sintax.java");
+        Path rutaSin = baseDir.resolve("src/ParserLexer/parser.java");
         if (Files.exists(rutaSin)) {
             Files.delete(rutaSin);
         }
         Files.move(
-            baseDir.resolve("Sintax.java"),
+            baseDir.resolve("parser.java"),
             rutaSin
         );
     }

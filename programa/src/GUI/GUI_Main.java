@@ -1,6 +1,8 @@
 
-package code;
+package GUI;
 
+import ParserLexer.LexerCup;
+import ParserLexer.sym;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;

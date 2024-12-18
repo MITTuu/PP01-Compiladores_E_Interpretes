@@ -1,6 +1,7 @@
-package code;
+package ParserLexer;
 import java_cup.runtime.Symbol;
 %%
+%public
 %class LexerCup
 %type java_cup.runtime.Symbol
 %cup
