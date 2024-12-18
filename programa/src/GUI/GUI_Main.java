@@ -207,18 +207,33 @@ public class GUI_Main extends javax.swing.JFrame {
        int contColumna = 1;
        int lexemaLength = 0;
        boolean continuaError = false;
-        // Obtén el texto de entrada desde txtResultado
+        // Obtiene el texto de entrada desde JTATextoArea
         String expr = JTATextoArea.getText(); 
         LexerCup lexerCup = new LexerCup(new StringReader(expr));
-        String resultado = "LINEA " + contLinea + "\t\t\t\t\t\tSIMBOLO \n";
+        
+        // Variables para definir el ancho de las columnas
+        int anchoColumna1 = 25;
+        int anchoColumna2 = 35;
+        int anchoColumna3 = 35;
 
+        // Formato dinámico
+        String formato = String.format("%%-%ds %%-%ds %%%ds%%n", anchoColumna1, anchoColumna2, anchoColumna3);
+
+        // StringBuilder para construir el texto
+        StringBuilder sb = new StringBuilder();
+        
+        // Linea de Titulos
+        sb.append(String.format(formato, "LINEA / COLUMNA ", "SIMBOLO", "LEXEMA"));
+        
+        // Primera Linea
+        sb.append(String.format(formato, "Linea " + contLinea , "", ""));
         try {
             while (true) {
                 //Tokens token = lexer.yylex();
                 Symbol symbol = lexerCup.next_token();
                 if (symbol == null) {
                     // Guardar el resultado en un archivo             
-                    JTATextoArea1.setText(resultado);
+                    JTATextoArea1.setText(sb.toString());
                     return;
                 }
                 //Registrar longitud de la cadena de caracteres del lexema para calcular la columna
@@ -232,190 +247,185 @@ public class GUI_Main extends javax.swing.JFrame {
                     case sym.Linea:
                         contLinea++;
                         contColumna = 0;
-                        resultado += "LINEA " + contLinea + "\n";
+                        sb.append(String.format(formato, "Linea " + contLinea , "", ""));
                         break;
                     case sym.AperturaBloque:
-                        resultado += "Columna " + contColumna + "\t<Apertura de Bloque>\t\t" + symbol.value +   "\n";
+                        sb.append(String.format(formato, "Columna " + contColumna , "<Apertura de Bloque>" , symbol.value ));
                         break;
                     case sym.CierreBloque:
-                        resultado += "Columna " + contColumna + "\t<CierreBloque>\t\t\t" + symbol.value +   "\n";
+                        sb.append(String.format(formato, "Columna " + contColumna , "<CierreBloque>" , symbol.value ));
                         break;
                     case sym.Integer:
-                        resultado += "Columna " + contColumna + "\t<Integer>\t\t\t" + symbol.value +   "\n";
+                        sb.append(String.format(formato, "Columna " + contColumna , "<Integer>" , symbol.value ));
                         break;
                     case sym.Float:
-                        resultado += "Columna " + contColumna + "\t<Float>\t\t\t\t" + symbol.value +  "\n";
+                        sb.append(String.format(formato, "Columna " + contColumna , "<Float>" , symbol.value ));
                         break;
                     case sym.Bool:
-                       resultado += "Columna " + contColumna +"\t<Bool>\t\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Bool>" , symbol.value ));
                        break;
                     case sym.Char:
-                       resultado += "Columna " + contColumna +"\t<Char>\t\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Char>" , symbol.value ));
                        break;
                     case sym.String:
-                       resultado += "Columna " + contColumna +"\t<String>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<String>" , symbol.value ));
                        break;
                     case sym.Identificador:
-                       resultado += "Columna " + contColumna +"\t<Identificador>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Identificador>" , symbol.value ));
                        break;
                     case sym.CorcheteApertura:
-                       resultado += "Columna " + contColumna +"\t<CorcheteApertura>\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<CorcheteApertura>" , symbol.value ));
                        break;
                     case sym.CorcheteCierre:
-                       resultado += "Columna " + contColumna +"\t<CorcheteCierre>\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<CorcheteCierre>" , symbol.value ));
                        break;
                     case sym.SignoAsignacion:
-                       resultado += "Columna " + contColumna +"\t<SignoAsignacion>\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<SignoAsignacion>" , symbol.value ));
                        break;
                     case sym.ParentesisApertura:
-                       resultado += "Columna " + contColumna +"\t<ParentesisApertura>\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<ParentesisApertura>" , symbol.value ));
                        break;
                     case sym.ParentesisCierre:
-                       resultado += "Columna " + contColumna +"\t<ParentesisApertura>\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<ParentesisApertura>" , symbol.value ));
                        break;
                     case sym.LiteralCaracter:
-                       resultado += "Columna " + contColumna +"\t<LiteralCaracter>\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<LiteralCaracter>" , symbol.value ));
                        break;
                     case sym.LiteralCadena:
-                       resultado += "Columna " + contColumna +"\t<LiteralCadena>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<LiteralCadena>" , symbol.value ));
                        break;
                     case sym.Suma:
-                       resultado += "Columna " + contColumna +"\t<Suma>\t\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Suma>" , symbol.value ));
                        break;
                     case sym.Resta:
-                       resultado += "Columna " + contColumna +"\t<Resta>\t\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Resta>" , symbol.value ));
                        break;
                     case sym.Division:
-                       resultado += "Columna " + contColumna +"\t<Division>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Division>" , symbol.value ));
                        break;
                     case sym.Multiplicacion:
-                       resultado += "Columna " + contColumna +"\t<Multiplicacion>\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Multiplicacion>" , symbol.value ));
                        break;
                     case sym.Modulo:
-                       resultado += "Columna " + contColumna +"\t<Modulo>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Modulo>" , symbol.value ));
                        break;
                     case sym.Potencia:
-                       resultado += "Columna " + contColumna +"\t<Potencia>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Potencia>" , symbol.value ));
                        break;
                     case sym.Incremento:
-                       resultado += "Columna " + contColumna +"\t<Incremento>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Incremento>" , symbol.value ));
                        break;
                     case sym.Decremento:
-                       resultado += "Columna " + contColumna +"\t<Decremento>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Decremento>" , symbol.value ));
                        break;
                     case sym.Negativo:
-                       resultado += "Columna " + contColumna +"\t<Negativo>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Negativo>" , symbol.value ));
                        break;
                     case sym.Menor:
-                       resultado += "Columna " + contColumna +"\t<Menor>\t\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Menor>" , symbol.value ));
                        break;
                     case sym.MenorIgual:
-                       resultado += "Columna " + contColumna +"\t<MenorIgual>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<MenorIgual>" , symbol.value ));
                        break;
                     case sym.Mayor:
-                       resultado += "Columna " + contColumna +"\t<Mayor>\t\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Mayor>" , symbol.value ));
                        break;
                     case sym.MayorIgual:
-                       resultado += "Columna " + contColumna +"\t<MayorIgual>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<MayorIgual>" , symbol.value ));
                        break;
                     case sym.Igual:
-                       resultado += "Columna " + contColumna +"\t<Igual>\t\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Igual>" , symbol.value ));
                        break;
                     case sym.Diferente:
-                       resultado += "Columna " + contColumna +"\t<Diferente>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Diferente>" , symbol.value ));
                        break;
                     case sym.Conjuncion:
-                       resultado += "Columna " + contColumna +"\t<Conjuncion>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Conjuncion>" , symbol.value ));
                        break;
                     case sym.Disyuncion:
-                       resultado += "Columna " + contColumna +"\t<Disyuncion>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Disyuncion>" , symbol.value ));
                        break;
                     case sym.Negacion:
-                       resultado += "Columna " + contColumna +"\t<Negacion>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Negacion>" , symbol.value ));
                        break;
                     case sym.If:
-                       resultado += "Columna " + contColumna +"\t<If>\t\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<If>" , symbol.value ));
                        break;
                     case sym.Else:
-                       resultado += "Columna " + contColumna +"\t<Else>\t\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Else>" , symbol.value ));
                        break;
                     case sym.While:
-                       resultado += "Columna " + contColumna +"\t<While>\t\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<While>" , symbol.value ));
                        break;
                     case sym.For:
-                       resultado += "Columna " + contColumna +"\t<For>\t\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<For>" , symbol.value ));
                        break;
                     case sym.Switch:
-                       resultado += "Columna " + contColumna +"\t<Switch>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Switch>" , symbol.value ));
                        break;
                     case sym.Case:
-                       resultado += "Columna " + contColumna +"\t<Case>\t\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Case>" , symbol.value ));
                        break;
                     case sym.Default:
-                       resultado += "Columna " + contColumna +"\t<Default>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Default>" , symbol.value ));
                        break;
                     case sym.Break:
-                       resultado += "Columna " + contColumna +"\t<Break>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Break>" , symbol.value ));
                        break;
                     case sym.Return:
-                       resultado += "Columna " + contColumna +"\t<Return>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Return>" , symbol.value ));
                        break;
                     case sym.DosPuntos:
-                       resultado += "Columna " + contColumna +"\t<DosPuntos>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<DosPuntos>" , symbol.value ));
                        break;
                     case sym.Print:
-                       resultado += "Columna " + contColumna +"\t<Print>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Print>" , symbol.value ));
                        break;
                     case sym.Read:
-                       resultado += "Columna " + contColumna +"\t<Read>\t\t\t" + symbol.value +   "\n";
-                       break;
-                    case sym.OneLineC:
-                       resultado += "Columna " + contColumna +"\t<OneLineC>\t\t\t" + symbol.value +   "\n";
-                       break;
-                    case sym.MultipleLineC:
-                       resultado += "Columna " + contColumna +"\t<MultipleLineC>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Read>" , symbol.value ));
                        break;
                     case sym.Comentario:
-                       resultado += "Columna " + contColumna +"\t<Comentario>\t\t\t" + symbol.value +   "\n";
+                       String valorSinSaltosComentario = symbol.value.toString().replaceAll("[\\r\\n]+", " "); 
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Comentario>" , valorSinSaltosComentario ));
                        break;                    
                     case sym.FinSentencia:
-                       resultado += "Columna " + contColumna +"\t<FinSentencia>\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<FinSentencia>" , symbol.value ));
                        break;
                     case sym.Main:
-                       resultado += "Columna " + contColumna +"\t<Main>\t\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Main>" , symbol.value ));
                        break;
                     case sym.LiteralEntero:
-                       resultado += "Columna " + contColumna +"\t<LiteralEntero>\t\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<LiteralEntero>" , symbol.value ));
                        break;   
                     case sym.LiteralFlotante:
-                       resultado += "Columna " + contColumna +"\t<LiteralFlotante>\t\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<LiteralFlotante>" , symbol.value ));
                        break;
                     case sym.Coma:
-                       resultado += "Columna " + contColumna +"\t<Coma>\t\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<Coma>" , symbol.value ));
                        break;
                     case sym.LiteralBool:
-                       resultado += "Columna " + contColumna +"\t<LiteralBool>\t\t\t\t" + symbol.value +   "\n";
+                       sb.append(String.format(formato, "Columna " + contColumna ,"<LiteralBool>" , symbol.value ));
                        break;                        
                     case sym.Error:
                         if(continuaError){
                             break;
                         }
-                        resultado += "Columna " + contColumna +"\t<ERROR: Símbolo no definido>" + "\n";
+                        sb.append(String.format(formato, "Columna " + contColumna ,"<ERROR: Símbolo no definido>" , "" ));
                         //Flag para registrar error solo una vez
                         continuaError = true;
                         break;
                     case sym.EspacioEnBlanco:
                         break;
                     case sym.FinDeArchivo:
-                        resultado += "  <Fin de archivo>\n";
+                        sb.append(String.format(formato, "<FIN DE ARCHIVO>", "", ""));
                         //Devuelve el resultado del texto analizado al alcanzar el fin del archivo
-                        JTATextoArea1.setText(resultado);
+                        JTATextoArea1.setText(sb.toString());
                         System.out.print("\033[H\033[2J");  
                         System.out.flush();  
-                        System.out.print(resultado);
+                        System.out.print(sb.toString());
                         return;    
                     default:
-                        resultado += "Columna " + contColumna + "\tSin Token < " + symbol.value + " >" +   "\n";
+                        sb.append(String.format(formato, "Columna " + contColumna , "Símbolo <no controlado>", symbol.value ));
                         break;  
                 }
                 contColumna+= lexemaLength;
