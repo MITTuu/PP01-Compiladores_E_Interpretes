@@ -22,6 +22,18 @@ import java_cup.runtime.Symbol;
         return new Symbol(type, yyline, yycolumn);
     }
 %}
+
+    LineTerminator = \r|\n|\r\n
+    InputCharacter = [^\r\n]
+    WhiteSpace     = {LineTerminator} | [ \t\f]
+
+    /* comments */
+    Comment = {EndOfLineComment} | {DocumentationComment}
+
+    // Comment can be the last line of the file, without line terminator.
+    EndOfLineComment     = "#" {InputCharacter}* {LineTerminator}?
+    DocumentationComment = "\\_" {CommentContent} "_"+ "/"
+    CommentContent       = [^\\]*
 %%
 
 /* Números enteros positivos o negativos (permitiendo el 0 como caso especial) */
@@ -145,8 +157,7 @@ ejecución de los programas.*/
     _[a-zA-Z0-9]+_ { return new Symbol(sym.Identificador, yychar, yyline, yytext()); }
 
 /*r. Además, debe permitir comentarios de una línea (#) o múltiples líneas (\_ _/).*/
-    "#.*" { return new Symbol(sym.OneLineC, yychar, yyline, yytext()); }
-    \\_(.|\\s)*?\\_\/ { return new Symbol(sym.MultipleLineC, yychar, yyline, yytext()); }
+    {Comment}                      { return new Symbol(sym.Comentario, yychar, yyline, yytext()); }
 
 /* Salto de línea */
     {nuevaLinea} { return new Symbol(sym.Linea, yychar, yyline, yytext()); }

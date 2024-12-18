@@ -207,7 +207,6 @@ public class GUI_Main extends javax.swing.JFrame {
        boolean continuaError = false;
         // Obtén el texto de entrada desde txtResultado
         String expr = JTATextoArea.getText(); 
-        Lexer lexer = new Lexer(new StringReader(expr));
         LexerCup lexerCup = new LexerCup(new StringReader(expr));
         String resultado = "LINEA " + contLinea + "\t\t\t\t\t\tSIMBOLO \n";
 
@@ -374,6 +373,9 @@ public class GUI_Main extends javax.swing.JFrame {
                     case sym.MultipleLineC:
                        resultado += "Columna " + contColumna +"\t<MultipleLineC>\t\t\t" + symbol.value +   "\n";
                        break;
+                    case sym.Comentario:
+                       resultado += "Columna " + contColumna +"\t<Comentario>\t\t\t" + symbol.value +   "\n";
+                       break;                    
                     case sym.FinSentencia:
                        resultado += "Columna " + contColumna +"\t<FinSentencia>\t\t\t" + symbol.value +   "\n";
                        break;
@@ -406,6 +408,8 @@ public class GUI_Main extends javax.swing.JFrame {
                         resultado += "  <Fin de archivo>\n";
                         //Devuelve el resultado del texto analizado al alcanzar el fin del archivo
                         JTATextoArea1.setText(resultado);
+                        System.out.print("\033[H\033[2J");  
+                        System.out.flush();  
                         System.out.print(resultado);
                         return;    
                     default:

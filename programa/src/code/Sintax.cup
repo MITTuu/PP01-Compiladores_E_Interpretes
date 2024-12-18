@@ -43,7 +43,7 @@ parser code
     terminal Print, Read;
 
 /*Comentarios*/
-    terminal OneLineC, MultipleLineC;
+    terminal OneLineC, MultipleLineC, Comentario;
 
 /*Otros*/
     terminal Linea, Error, EspacioEnBlanco, FinDeArchivo, FinSentencia, Main;
